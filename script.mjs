@@ -36,6 +36,12 @@ function getQuote(req, res, next) {
 
 server.get("/tmp/quote", getQuote);
 
+server.post('/tmp/sum/:a/:b', function(req, res) {
+    const a = Number(req.params.a);
+    const b = Number(req.params.b);
+    const svar = a + b;
+    res.status(HTTP_CODES.SUCCESS.OK).send(svar.toString());
+});
 
 server.listen(server.get('port'), function () {
     console.log('server running', server.get('port'));
