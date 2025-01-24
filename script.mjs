@@ -7,7 +7,7 @@ const port = process.env.PORT || 8000;
 server.set("port", port);
 server.use(express.static("public"));
 
-// Poem ----------------------------------------------------------
+//  Poem ----------------------------------------------------------
 function getPoem(req, res, next) {
   res
     .status(HTTP_CODES.SUCCESS.OK)
@@ -43,7 +43,7 @@ function getQuote(req, res, next) {
 // Returns quote with URL
 server.get("/temp/quote", getQuote);
 
-// Adding numbers from URL adress ----------------------------------------------------------
+//  Adding numbers from URL adress ----------------------------------------------------------
 server.post("/temp/sum/:a/:b", getAddition);
 
 function getAddition(req, res, next) {
@@ -59,31 +59,43 @@ function getAddition(req, res, next) {
   res.status(HTTP_CODES.SUCCESS.OK).send(answer.toString()).end();
 }
 
-// Deck of cards ----------------------------------------------------------
+//  Deck of cards ----------------------------------------------------------
 const suitList = ["spades", "hearts", "clubs", "diamonds"];
 const faceCardList = ["jack", "queen", "king", "ace"];
+const deckList = [];
+let deckID = -1;
+
+function generateDeckID() {
+  deckID++;
+  return deckID;
+}
 
 function createDeck(req, res, next) {
+  const deckObject = { id: generateDeckID(), deck: null };
   const deck = [];
 
   for (const currentSuit of suitList) {
-    // Legg til kort 2-10 basert på greia hahaha
+    // Legger til kort fra 2-10
     for (let i = 2; i <= 10; i++) {
       const card = { suit: currentSuit, value: i };
       deck.push(card);
     }
-    //Legg til faceCards hver for ne
+    // Legger til facecards basert på liste
     for (const currentFaceCard of faceCardList) {
       const card = { suit: currentSuit, value: currentFaceCard };
       deck.push(card);
     }
   }
-  res.status(HTTP_CODES.SUCCESS.OK).send(deck);
+
+  deckObject.deck = deck;
+  deckList.push(deckObject);
+
+  res.status(HTTP_CODES.SUCCESS.OK).send(deckObject.id.toString());
 }
 
 server.post("/temp/deck", createDeck);
 
-// Starts the server ----------------------------------------------------------
+//  Starts the server ----------------------------------------------------------
 server.listen(server.get("port"), function () {
   console.log("server running", server.get("port"));
 });
