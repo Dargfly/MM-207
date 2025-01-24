@@ -18,7 +18,7 @@ function getPoem(req, res, next) {
 }
 
 // Returns poem with URL
-server.get("/tmp/poem", getPoem);
+server.get("/temp/poem", getPoem);
 
 // Quote ----------------------------------------------------------
 const randomQuotes = [
@@ -41,12 +41,12 @@ function getQuote(req, res, next) {
 }
 
 // Returns quote with URL
-server.get("/tmp/quote", getQuote);
+server.get("/temp/quote", getQuote);
 
 // Adding numbers from URL adress ----------------------------------------------------------
-server.post("/tmp/sum/:a/:b", getAddition);
+server.post("/temp/sum/:a/:b", getAddition);
 
-function getAddition(req, res) {
+function getAddition(req, res, next) {
   const a = Number(req.params.a);
   const b = Number(req.params.b);
   let answer = null;
@@ -56,8 +56,32 @@ function getAddition(req, res) {
     answer = a + b;
   }
 
-  res.status(HTTP_CODES.SUCCESS.OK).send(answer.toString());
+  res.status(HTTP_CODES.SUCCESS.OK).send(answer.toString()).end();
 }
+
+// Deck of cards ----------------------------------------------------------
+const suitList = ["spades", "hearts", "clubs", "diamonds"];
+const faceCardList = ["jack", "queen", "king", "ace"];
+
+function createDeck(req, res, next) {
+  const deck = [];
+
+  for (const currentSuit of suitList) {
+    // Legg til kort 2-10 basert på greia hahaha
+    for (let i = 2; i <= 10; i++) {
+      const card = { suit: currentSuit, value: i };
+      deck.push(card);
+    }
+    //Legg til faceCards hver for ne
+    for (const currentFaceCard of faceCardList) {
+      const card = { suit: currentSuit, value: currentFaceCard };
+      deck.push(card);
+    }
+  }
+  res.status(HTTP_CODES.SUCCESS.OK).send(deck);
+}
+
+server.post("/temp/deck", createDeck);
 
 // Starts the server ----------------------------------------------------------
 server.listen(server.get("port"), function () {
