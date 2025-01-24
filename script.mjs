@@ -70,8 +70,9 @@ function generateDeckID() {
   return deckID;
 }
 
+//  Generates a deck of cards
 function createDeck(req, res, next) {
-  const deckObject = { id: generateDeckID(), deck: null };
+  const deckObject = { deck_id: generateDeckID(), deck: null };
   const deck = [];
 
   for (const currentSuit of suitList) {
@@ -90,10 +91,51 @@ function createDeck(req, res, next) {
   deckObject.deck = deck;
   deckList.push(deckObject);
 
-  res.status(HTTP_CODES.SUCCESS.OK).send(deckObject.id.toString());
+  res.status(HTTP_CODES.SUCCESS.OK).send(deckObject.deck_id.toString());
+  // res.status(HTTP_CODES.SUCCESS.OK).send(deckObject);
 }
 
 server.post("/temp/deck", createDeck);
+
+//  Gets deck based on ID
+function getDeck(req, res, next) {
+  const aDeck_id = Number(req.params.deck_id);
+  const targetDeck = deckList.find((element) => element.deck_id === aDeck_id);
+
+  //If deck id provided in the URL doesn't exist;
+  if (!targetDeck) {
+    return res.status(404).send("Deck not found");
+  }
+  req.deck = targetDeck;    //Forwards found deck to the next function
+  next();
+}
+
+//  Shuffles the deck of cards
+function shuffleDeck(req, res, next) {
+  const deck = req.deck.deck;
+
+  //Uses Fisher-Yates shuffle algorithm
+  for (let i = deck.length - 1; i > 0; i--) {
+    const randomIndex = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[randomIndex]] = [deck[randomIndex], deck[i]];
+  }
+
+  res
+    .status(HTTP_CODES.SUCCESS.OK)
+    .send("Deck with id " + req.deck.deck_id + " shuffled!");
+}
+
+//Runs the functions in order. Uses next() in order to run the next function.
+server.patch("/temp/deck/shuffle/:deck_id", getDeck, shuffleDeck);
+
+//  Returns the whole deck
+function returnDeck(req, res, next) {
+  const aDeck_id = Number(req.params.deck_id);
+  const targetDeck = deckList.find((element) => element.deck_id === aDeck_id);
+  res.status(HTTP_CODES.SUCCESS.OK).send(targetDeck);
+}
+
+server.get("/temp/deck/:deck_id", returnDeck);
 
 //  Starts the server ----------------------------------------------------------
 server.listen(server.get("port"), function () {
