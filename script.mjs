@@ -91,14 +91,13 @@ function createDeck(req, res, next) {
   deckObject.deck = deck;
   deckList.push(deckObject);
 
-  res.status(HTTP_CODES.SUCCESS.OK).send(deckObject.deck_id.toString());
-  // res.status(HTTP_CODES.SUCCESS.OK).send(deckObject);
+  res.status(HTTP_CODES.SUCCESS.OK).json({ deck_id: deckObject.deck_id });
 }
 
 server.post("/temp/deck", createDeck);
 
-//  Gets deck based on ID
-function getDeck(req, res, next) {
+//  Gets deck to shuffle based on ID
+function getDeckToShuffle(req, res, next) {
   const aDeck_id = Number(req.params.deck_id);
   const findTargetDeck = deckList.find(
     (element) => element.deck_id === aDeck_id
@@ -106,7 +105,7 @@ function getDeck(req, res, next) {
 
   //If deck id provided in the URL doesn't exist;
   if (!findTargetDeck) {
-    return res.status(404).send("Deck not found");
+    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({data:"Deck not found"});
   }
   req.deck = findTargetDeck; //Forwards found deck to the next function
   next();
@@ -120,15 +119,15 @@ function shuffleDeck(req, res, next) {
   for (let i = deck.length - 1; i > 0; i--) {
     const randomIndex = Math.floor(Math.random() * (i + 1));
     [deck[i], deck[randomIndex]] = [deck[randomIndex], deck[i]];
-  };
+  }
 
   res
     .status(HTTP_CODES.SUCCESS.OK)
-    .send("Deck with id " + req.deck.deck_id + " shuffled!");
-};
+    .json({data:"Deck with ID " + req.deck.deck_id + " shuffled!"});
+}
 
 //Runs the functions in order. Uses next() in order to run the next function.
-server.patch("/temp/deck/shuffle/:deck_id", getDeck, shuffleDeck);
+server.patch("/temp/deck/shuffle/:deck_id", getDeckToShuffle, shuffleDeck);
 
 //  Returns the whole deck
 function returnDeck(req, res, next) {
@@ -138,36 +137,38 @@ function returnDeck(req, res, next) {
   );
 
   if (!findTargetDeck) {
-    return res.status(404).send("Deck not found");
+    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({data:"Deck not found"});
   }
 
-  res.status(HTTP_CODES.SUCCESS.OK).send(findTargetDeck);
-};
+  res.status(HTTP_CODES.SUCCESS.OK).json({data: findTargetDeck});
+}
 
 server.get("/temp/deck/:deck_id", returnDeck);
 
-//  Returns the whole deck
-function returnRandomCard(req, res, next) {
+//  Draw a random card
+function drawRandomCard(req, res, next) {
   const aDeck_id = Number(req.params.deck_id);
   const findTargetDeck = deckList.find(
     (element) => element.deck_id === aDeck_id
   );
   if (!findTargetDeck) {
-    return res.status(404).send("Deck not found");
-  };
+    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({data:"Deck not found"});
+  }
   const targetDeck = findTargetDeck.deck;
 
   //Checks amount of cards in deck
   if (targetDeck.length <= 0) {
-    return res.status(204).send("Deck doesn't have cards left");
-  };
+    return res
+      .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
+      .json({data: "Deck doesn't have cards left"});
+  }
 
   const randomCardNumber = Math.floor(Math.random() * targetDeck.length);
-  const randomCard = targetDeck.splice(randomCardNumber, 1);
-  res.status(HTTP_CODES.SUCCESS.OK).send(randomCard);
-};
+  const randomCard = targetDeck.splice(randomCardNumber, 1)[0];
+  res.status(HTTP_CODES.SUCCESS.OK).json(randomCard);
+}
 
-server.get("/temp/deck/:deck_id/card", returnRandomCard);
+server.get("/temp/deck/:deck_id/card", drawRandomCard);
 
 //  Starts the server ----------------------------------------------------------
 server.listen(server.get("port"), function () {
