@@ -91,7 +91,7 @@ async function drawCard(aDeckID) {
 
     const card = await response.json();
     return card;
-  } catch {
+  } catch (error) {
     dialogMessage("Error", error.message || "An unexpected error occurred.");
   }
 }
