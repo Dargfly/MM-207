@@ -105,7 +105,7 @@ function getDeckToShuffle(req, res, next) {
 
   //If deck id provided in the URL doesn't exist;
   if (!findTargetDeck) {
-    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({data:"Deck not found"});
+    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ data: "Deck not found" });
   }
   req.deck = findTargetDeck; //Forwards found deck to the next function
   next();
@@ -123,7 +123,7 @@ function shuffleDeck(req, res, next) {
 
   res
     .status(HTTP_CODES.SUCCESS.OK)
-    .json({data:"Deck with ID " + req.deck.deck_id + " shuffled!"});
+    .json({ data: "Deck with ID " + req.deck.deck_id + " shuffled!" });
 }
 
 //Runs the functions in order. Uses next() in order to run the next function.
@@ -137,10 +137,10 @@ function returnDeck(req, res, next) {
   );
 
   if (!findTargetDeck) {
-    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({data:"Deck not found"});
+    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ data: "Deck not found" });
   }
 
-  res.status(HTTP_CODES.SUCCESS.OK).json({data: findTargetDeck});
+  res.status(HTTP_CODES.SUCCESS.OK).json({ data: findTargetDeck });
 }
 
 server.get("/temp/deck/:deck_id", returnDeck);
@@ -152,15 +152,13 @@ function drawRandomCard(req, res, next) {
     (element) => element.deck_id === aDeck_id
   );
   if (!findTargetDeck) {
-    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({data:"Deck not found"});
+    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ data: "Deck not found" });
   }
   const targetDeck = findTargetDeck.deck;
 
   //Checks amount of cards in deck
   if (targetDeck.length <= 0) {
-    return res
-      .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
-      .json({data: "Deck doesn't have cards left"});
+    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ data: "Deck doesn't have cards left" });
   }
 
   const randomCardNumber = Math.floor(Math.random() * targetDeck.length);
