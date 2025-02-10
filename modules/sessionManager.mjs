@@ -32,8 +32,8 @@ export const loginUser = (req, res) => {
 };
 
 export const logoutUser = (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
+  req.session.destroy((error) => {
+    if (error) {
       return res.status(500).send("Feil ved sletting av sesjon");
     }
     res.clearCookie('connect.sid');  // Slett sesjons-cookie
