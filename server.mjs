@@ -1,8 +1,12 @@
 import express from "express";
-import {createDeck, getDeckToShuffle, shuffleDeck, returnDeck, drawRandomCard} from "./routes/deck.mjs";
-import {getPoem, getQuote} from "./routes/writings.mjs"
-import {getAddition} from "./routes/math.mjs"
-import {setupSession, loginUser, logoutUser, checkAuthentication} from "./modules/sessionManager.mjs";
+import { createDeck, getDeckToShuffle, shuffleDeck, returnDeck, drawRandomCard } from "./routes/deck.mjs";
+import { getPoem, getQuote } from "./routes/writings.mjs"
+import { getAddition } from "./routes/math.mjs"
+import { setupSession, loginUser, logoutUser, checkAuthentication } from "./modules/sessionManager.mjs";
+
+import {treeRouter} from './routes/treeAPI.mjs';
+import {questLogRouter} from './routes/questLogAPI.mjs';
+import {userRouter} from './routes/userAPI.mjs';
 
 const server = express();
 const port = process.env.PORT || 8000;
@@ -16,6 +20,11 @@ setupSession(server);
 
 
 //  Routes ----------------------------------------------------------
+//Avatar Project
+server.use("/tree/", treeRouter);
+server.use("/quest", questLogRouter);
+server.use("/user", userRouter)
+
 //Deck of Cards-routes
 server.post("/temp/deck", createDeck);
 server.patch("/temp/deck/shuffle/:deck_id", getDeckToShuffle, shuffleDeck);
