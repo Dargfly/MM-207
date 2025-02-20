@@ -4,9 +4,9 @@ import { getPoem, getQuote } from "./routes/writings.mjs"
 import { getAddition } from "./routes/math.mjs"
 import { startSession, updateSession } from './modules/sessionManager.mjs';
 
-import {treeRouter} from './routes/treeAPI.mjs';
-import {questLogRouter} from './routes/questLogAPI.mjs';
-import {userRouter} from './routes/userAPI.mjs';
+import treeRouter from './routes/treeAPI.mjs';
+import questLogRouter from './routes/questLogAPI.mjs';
+import userRouter from './routes/userAPI.mjs';
 
 const server = express();
 const port = process.env.PORT || 8000;
@@ -25,6 +25,7 @@ server.use(startSession);
 server.use("/tree/", treeRouter);
 server.use("/quest", questLogRouter);
 server.use("/user", userRouter)
+
 
 //Deck of Cards-routes
 server.post("/temp/deck", createDeck);
