@@ -48,6 +48,7 @@ treeRouter.get("/node/:node", (req, res, next) => {
     }
 })
 
+//Replace node data on existing node
 treeRouter.patch("/", (req, res, next) => {
     const inpParentData = req.body.parentData;
     const inpNewData = req.body.newData;  // Ny data for noden
