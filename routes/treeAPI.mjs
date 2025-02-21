@@ -1,10 +1,19 @@
 import express from "express";
+import fs from "fs/promises";
 import { Tree, Node, inflateTree } from "../data/tree.mjs";
 import HTTP_CODES from "../utils/httpCodes.mjs";
-import { treeDummyAmbulance } from "../init/init.mjs"; // Juster banen til filen hvor `tree` er eksportert
+// import { treeDummyAmbulance } from "../init/init.mjs";  // Importer initializeTree-funksjonen
 const treeRouter = express.Router();
 
-const tree = inflateTree(treeDummyAmbulance);
+let treeDummyAmbulance = null
+let tree = null
+async function start() {
+    treeDummyAmbulance = await fs.readFile("../dummy/TreeAmbulanceDriver.json", "Utf-8");
+    const jsonData = JSON.parse(treeDummyAmbulance);
+    tree = jsonData
+}
+
+start(); // Kjører den asynkrone funksjonen
 
 
 treeRouter.use(express.json());
