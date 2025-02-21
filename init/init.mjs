@@ -1,4 +1,3 @@
-console.log(process.version); // For å sjekke Node.js versjonen
 import fs from "fs/promises";
 import { Node, Tree, saveTree, inflateTree } from "../data/tree.mjs";
 
@@ -12,8 +11,6 @@ async function start() {
   const jsonData = JSON.parse(treeDummyAmbulance);
 }
 
-import fs from 'fs/promises';
-
 async function checkFiles() {
   const files = await fs.readdir('./dummy');
   console.log(files);
@@ -23,4 +20,4 @@ checkFiles();
 
 start(); // Kjører den asynkrone funksjonen
 
-export { treeDummyAmbulance };
+export {treeDummyAmbulance};
