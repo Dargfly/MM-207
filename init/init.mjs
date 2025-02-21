@@ -11,13 +11,6 @@ async function start() {
   const jsonData = JSON.parse(treeDummyAmbulance);
 }
 
-async function checkFiles() {
-  const files = await fs.readdir('./dummy');
-  console.log(files);
-}
-
-checkFiles();
-
 start(); // Kjører den asynkrone funksjonen
 
 export {treeDummyAmbulance};
