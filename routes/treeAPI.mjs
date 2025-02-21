@@ -48,4 +48,19 @@ treeRouter.get("/node/:node", (req, res, next) => {
     }
 })
 
+treeRouter.patch("/", (req, res, next) => {
+    const inpParentData = req.body.parentData;
+    const inpNewData = req.body.newData;  // Ny data for noden
+
+    // Finn parent node i treet
+    const parentNode = findNode(tree.root, inpParentData);
+    if (parentNode) {
+        // Endre dataen til den funne noden
+        parentNode.data = inpNewData;
+        res.status(200).json({ message: "Node data updated successfully", tree });
+    } else {
+        res.status(404).json({ error: "Parent node not found" });
+    }
+});
+
 export default treeRouter
