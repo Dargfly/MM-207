@@ -1,3 +1,4 @@
+console.log(process.version); // For å sjekke Node.js versjonen
 import fs from "fs/promises";
 import { Node, Tree, saveTree, inflateTree } from "../data/tree.mjs";
 
