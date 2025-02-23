@@ -1,11 +1,9 @@
 import express from "express";
-// import fs from "fs/promises";
+import fs from "fs/promises";
 import { Tree, Node, inflateTree } from "../data/tree.mjs";
 import HTTP_CODES from "../utils/httpCodes.mjs";
 // import { treeDummyAmbulance } from "../init/init.mjs";  // Importer initializeTree-funksjonen
 const treeRouter = express.Router();
-
-const fs = require('fs').promises;
 
 let tree = null;
 
