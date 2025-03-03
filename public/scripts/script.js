@@ -1,5 +1,9 @@
 "use strict";
 
+if("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/scripts/sw.js")
+}
+
 const btnNewDeck = document.getElementById("btnNewDeck");
 const btnShowDeck = document.getElementById("btnShowDeck");
 const btnShuffleDeck = document.getElementById("btnShuffleDeck");
