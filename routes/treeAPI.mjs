@@ -11,7 +11,7 @@ async function loadTree() {
     try {
         const data = await fs.readFile("./dummy/TreeAmbulanceDriver.json", "utf-8");
         tree = JSON.parse(data);
-        console.log("Tree loaded successfully");
+        // console.log("Tree loaded successfully");
     } catch (error) {
         console.error("Failed to load tree:", error);
     }
