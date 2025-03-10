@@ -1,25 +1,11 @@
 import express from "express";
 import fs from "fs/promises";
 import { Tree, Node, inflateTree } from "../data/tree.mjs";
+import {JSONtreeDummyAmbulance } from "../init/init.mjs"
 import HTTP_CODES from "../utils/httpCodes.mjs";
-// import { treeDummyAmbulance } from "../init/init.mjs";  // Importer initializeTree-funksjonen
 const treeRouter = express.Router();
 
-let tree = null;
-
-async function loadTree() {
-    try {
-        const data = await fs.readFile("./dummy/TreeAmbulanceDriver.json", "utf-8");
-        tree = JSON.parse(data);
-        // console.log("Tree loaded successfully");
-    } catch (error) {
-        console.error("Failed to load tree:", error);
-    }
-}
-
-loadTree();
-
-
+let tree = JSONtreeDummyAmbulance; // Venter på at JSON blir lastet før bruk
 treeRouter.use(express.json());
 
 //Returns whole tree

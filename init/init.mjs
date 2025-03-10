@@ -1,16 +1,25 @@
 import fs from "fs/promises";
 import { Node, Tree, saveTree, inflateTree } from "../data/tree.mjs";
 
-// let treeDummyAmbulance = null
-// // Start asynkron funksjon
-// async function start() {
-//   treeDummyAmbulance = await fs.readFile("./dummy/TreeAmbulanceDriver.json", "Utf-8");
-
+// Start asynkron funksjon
+async function start() {
   const server = await import("../server.mjs");
+}
 
-//   const jsonData = JSON.parse(treeDummyAmbulance);
-// }
+let JSONtreeDummyAmbulance = null;
 
-// start(); // Kjører den asynkrone funksjonen
+(async function loadTree() {
+  try {
+    const treeDummyAmbulance = await fs.readFile(
+      "./dummy/TreeAmbulanceDriver.json",
+      "utf-8"
+    );
+    JSONtreeDummyAmbulance = JSON.parse(treeDummyAmbulance);
+    console.log("Tree loaded successfully");
+  } catch (error) {
+    console.error("Failed to load tree:", error);
+  }
+})();
 
-// export {treeDummyAmbulance};
+export { JSONtreeDummyAmbulance };
+start(); // Kjører den asynkrone funksjonen
