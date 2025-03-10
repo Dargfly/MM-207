@@ -6,7 +6,7 @@ const config = {
   ssl: (process.env.DB_SSL === "true") ? process.env.DB_SSL : false,
 }
 
-create("Insert ......", "34")
+// create("Insert ......", "34")
 
 async function create(statement, ...values) {
   return await runQuery(statement, ...values);
@@ -29,18 +29,18 @@ function runQuery(statement, ...values) {
     client.connect();
     client.query(statement, [...values]);
 
-    if (result.rowcount <= 0) {
-      throw new error("No records created");
+    if (result.rows.length > 0) {
+      return result.rows[0];
+    } else {
+      throw new Error("No records found");
     }
-
-    return result.row[0];
   } catch (error) {
     //FEILHÅNDTERING HAVNER HER
 
     console.error(error);
     return null
   } finally {
-    client.close();
+    client.end();
   }
 
 }
