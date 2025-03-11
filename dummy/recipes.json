@@ -1,0 +1,18 @@
+{
+  "recipes": [
+    {
+      "recipeID": 1,
+      "object": "strawberry_cake",
+      "ingredients": [
+        {
+          "name": "egg",
+          "quantity": "2"
+        }
+      ],
+      "instructions": [
+        "Take the bowl out",
+        "Crack the eggs"
+      ]
+    }
+  ]
+}
