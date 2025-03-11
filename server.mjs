@@ -5,6 +5,7 @@ import { getAddition } from "./routes/math.mjs"
 import { startSession, updateSession } from './modules/sessionManager.mjs';
 
 import treeRouter from './routes/treeAPI.mjs';
+import recipeRouter from './routes/recipeAPI.mjs';
 import questLogRouter from './routes/questLogAPI.mjs';
 import userRouter from './routes/userAPI.mjs';
 
@@ -21,6 +22,12 @@ server.use(startSession);
 
 
 //  Routes ----------------------------------------------------------
+
+//Food recipes
+server.use("/recipe/", recipeRouter)
+
+
+
 //Avatar Project
 server.use("/tree/", treeRouter);
 server.use("/quest", questLogRouter);
