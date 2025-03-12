@@ -5,11 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.webmanifest">
-    <title>App</title>
+    <title>Recipeace</title>
 </head>
 
 <body>
-    <h1>Welcome to this app</h1>
+    <h1>Welcome to ReciPeace</h1>
+
+    <button id="btnGetRecipe">Return recipe</button>
+    <button id="btnAddRecipe">Add recipe</button>
+    <button id="btnEditRecipe">Edit Recipe</button>
+    <button id="btnDeleteRecipe">Delete Recipe</button>
+    <br>
+    <label for="inpRecipeID">Deck ID:</label>
+    <input type="number" name="inpRecipeID" id="inpRecipeID">
+
+    <dialog id="dialog">
+        <h2 id="titleDialog"></h2>
+        <p id="textDialog"></p>
+        <button id="btnCloseDialog">OK</button>
+    </dialog>
 
 
     <!-- <button id="btnNewDeck">New deck</button>
@@ -22,17 +36,13 @@
     <label for="inpDeckID">Deck ID:</label>
     <input type="number" name="inpDeckID" id="inpDeckID">
 
-    <dialog id="dialog">
-        <h2 id="titleDialog"></h2>
-        <p id="textDialog"></p>
-        <button id="btnCloseDialog">OK</button>
-    </dialog>
+    
     <br>
     <br>
     <img id="imgCard" src="" alt="">  -->
 
 
-    <script src="scripts/script.js"></script>
+    <script src="scripts/script.mjs"></script>
 </body>
 
 </html>
