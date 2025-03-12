@@ -2,11 +2,11 @@ import pg from "pg"
 const { Client } = pg //samme som pg.Client
 
 const config = {
-  connectionString: process.env.DB_CREDENTIALS,
-  ssl: (process.env.DB_SSL === "true") ? process.env.DB_SSL : false,
-}
-
-// create("Insert ......", "34")
+  connectionString: process.env.DB_CREDENTIALS, // Bruk miljøvariabelen her
+  ssl: { 
+    rejectUnauthorized: false, 
+  },
+};
 
 async function create(statement, ...values) {
   return await runQuery(statement, ...values);
@@ -21,29 +21,33 @@ async function purge(statement, ...values) {
   return await runQuery(statement, ...values);
 }
 
-function runQuery(statement, ...values) {
-  const client = new Client(config)
-  const result = client.query(statement, [...values])
+async function runQuery(query, ...values) {
+  const client = new Client(config); // <-- Oppretter en ny klient
+  await client.connect(); // <-- Koble til databasen
+  // const client = await client.connect();
 
   try {
-    client.connect();
-    client.query(statement, [...values]);
+    const result = await client.query(query, values);
+    console.log("Connected to the database successfully!");
 
-    if (result.rows.length > 0) {
-      return result.rows[0];
-    } else {
-      throw new Error("No records found");
+    if (result.rowCount <= 0) {
+      throw new Error("Row count is 0. No records created.");
     }
+
+    if (query.trim().toUpperCase().startsWith("SELECT")) {
+      return result.rows;
+    }
+
+    return result.rows[0];
   } catch (error) {
-    //FEILHÅNDTERING HAVNER HER
-
     console.error(error);
-    return null
+    throw error;
   } finally {
-    client.end();
+    await client.end();
   }
-
 }
 
-
-
+// Insert "Hello world!" into the messages table
+create("INSERT INTO recipes (object) VALUES ($1) RETURNING *;", ["Hello world!"])
+  .then(result => console.log("Inserted:", result))
+  .catch(error => console.error("Error inserting:", error));
