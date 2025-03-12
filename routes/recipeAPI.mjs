@@ -16,47 +16,47 @@ recipeRouter.use(express.json());
 
 //Get recipe based on ID
 recipeRouter.get("/:recipeID?", (req, res) => {
-  const inpRecipeID = req.params.recipeID;
+  const recipeID = req.params.recipeID;
 
-  if (!inpRecipeID) {
+  if (!recipeID) {
     return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Provide an ID for recipe to return" });
   }
 
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Return recipe feature not implemented yet", inpRecipeID });
+  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Return recipe feature not implemented yet", recipeID });
 });
 
 
 
 //Create recipe
 recipeRouter.post("/", (req, res, next) => {
-  const inpRecipeID = req.params.recipeID;
+  const recipeID = req.params.recipeID;
 
   //Create a recipe, and return id or whole object
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Adding recipe feature not implemented yet", inpRecipeID});
+  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Adding recipe feature not implemented yet", recipeID});
 })
 
 //Update recipe based on ID
 recipeRouter.put("/:recipeID?", (req, res, next) => {
-  const inpRecipeID = req.params.recipeID;
+  const recipeID = req.params.recipeID;
 
-  if (!inpRecipeID) {
+  if (!recipeID) {
     return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Provide an ID for recipe to update" });
   }
 
   //Put recipe in object.
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Editing recipe feature not implemented yet", inpRecipeID});
+  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Editing recipe feature not implemented yet", recipeID});
 })
 
 //Delete recipe based on ID
 recipeRouter.delete("/:recipeID?", (req, res, next) => {
-  const inpRecipeID = req.params.recipeID;
+  const recipeID = req.params.recipeID;
 
-  if (!inpRecipeID) {
+  if (!recipeID) {
     return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Provide an ID for recipe to delete" });
   }
 
   //Put recipe in object.
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Removing recipe feature not implemented yet", inpRecipeID});
+  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Removing recipe feature not implemented yet", recipeID});
 })
 
 
