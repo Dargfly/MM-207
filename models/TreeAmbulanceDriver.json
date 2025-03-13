@@ -1,0 +1,54 @@
+{
+  "root": {
+    "data": "",
+    "connections": [
+      {
+        "data": "Health",
+        "connections": [
+          {
+            "data": "Good physical health",
+            "connections": []
+          },
+          {
+            "data": "Good mental health",
+            "connections": []
+          }
+        ]
+      },
+      {
+        "data": "Work",
+        "connections": [
+          {
+            "data": "Good at working independently",
+            "connections": []
+          },
+          {
+            "data": "Can collaborate well",
+            "connections": []
+          },
+          {
+            "data": "Responsible",
+            "connections": []
+          }
+        ]
+      },
+      {
+        "data": "Communication",
+        "connections": [
+          {
+            "data":"Communicate well with colleagues",
+            "connections": []
+          },
+          {
+            "data": "Communicate well with patients",
+            "connections": []
+          }
+        ]
+      },
+      {
+        "data": "Quick decision-making",
+        "connections": []
+      }
+    ]
+  }
+}
