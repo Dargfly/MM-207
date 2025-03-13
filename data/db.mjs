@@ -19,7 +19,7 @@ export async function update(statement, ...values) {
 export async function read(statement, ...values) {
   return await runQuery(statement, ...values);
 }
-export async function purge(statement, ...values) {
+export async function remove(statement, ...values) {
   return await runQuery(statement, ...values);
 }
 
