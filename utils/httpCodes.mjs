@@ -7,7 +7,8 @@ const HTTP_CODES = {
         CREATED: 201
     },
     CLIENT_ERROR: {
-        NOT_FOUND: 404
+        NOT_FOUND: 404,
+        BAD_REQUEST: 400
     }
 }
 
