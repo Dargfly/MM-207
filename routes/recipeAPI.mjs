@@ -2,16 +2,24 @@ import express from "express";
 import fs from "fs/promises";
 import HTTP_CODES from "../utils/httpCodes.mjs";
 
-import { JSONtreeDummyAmbulance, JSONrecipes} from "../init/init.mjs"
-const recipeRouter = express.Router();
 
-let tree = JSONtreeDummyAmbulance; // Venter på at JSON blir lastet før bruk
+import StoreRecipeRecord from "../data/recipesRecordStore.mjs"; // Pass på at stien stemmer
+import RecipeModel from "../models/recipeModel.mjs";
+
+import { JSONrecipes} from "../init/init.mjs"
+
+
+const storeRecipes = new StoreRecipeRecord(); // Opprett en instans av databasen
+
+
 
 let recipes = JSONrecipes;
+let allRecipes = [];
 
 
 
 
+const recipeRouter = express.Router();
 recipeRouter.use(express.json());
 
 //Get recipe based on ID
@@ -28,11 +36,29 @@ recipeRouter.get("/:recipeID?", (req, res) => {
 
 
 //Create recipe
-recipeRouter.post("/", (req, res, next) => {
-  const recipeID = req.params.recipeID;
-
-  //Create a recipe, and return id or whole object
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Adding recipe feature not implemented yet", recipeID});
+recipeRouter.post("/", async (req, res, next) => {
+  try {
+    const { object, ingredients, instructions } = req.body
+    //Lager en oppskrift basert på modellen
+    const newRecipe = new RecipeModel({ object, ingredients, instructions });
+  
+    // Lagre oppskriften i den faktiske databasen ved hjelp av StoreRecipeRecord
+    const createdRecipe = await storeRecipes.create(newRecipe);  // Vi antar at `create` er definert i `recipesRecordStore.js`
+    
+     // Legg til oppskriften i "databasen"
+    allRecipes.push(newRecipe);
+  
+    //Create a recipe, and return id or whole object
+    res.status(HTTP_CODES.SUCCESS.CREATED).json({
+      message: "Recipe created successfully!",
+      recipe: createdRecipe,
+    });
+  } catch (error) {
+    res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({
+      message: "Error creating recipe",
+      error: error.message,
+    });
+  } 
 })
 
 //Update recipe based on ID
