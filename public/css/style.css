@@ -1,0 +1,11 @@
+.recipe {
+  cursor: pointer;
+  padding: 10px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.recipe:hover {
+  background-color: #f0f0f0;
+}
