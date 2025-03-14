@@ -6,7 +6,7 @@ import * as db from "./db.mjs";
 export default class StoreRecipeRecord extends RecordStoreInterface {
   async create(aRecipe) {
     const query = `
-      INSERT INTO recipes_test (object, ingredients, instructions)
+      INSERT INTO recipes (object, ingredients, instructions)
       VALUES ($1, $2, $3)
       RETURNING *
   `;
@@ -22,7 +22,7 @@ export default class StoreRecipeRecord extends RecordStoreInterface {
 
   async read(aRecipe_id) {
     const query = `
-      SELECT * FROM recipes_test
+      SELECT * FROM recipes
       WHERE id = $1
     `;    
   
@@ -33,7 +33,7 @@ export default class StoreRecipeRecord extends RecordStoreInterface {
 
   async update(aRecipe_id, recipeChanges) {
     const query = `
-        UPDATE recipes_test
+        UPDATE recipes
         SET object = $1,
             ingredients = $2,
             instructions = $3
@@ -53,7 +53,7 @@ export default class StoreRecipeRecord extends RecordStoreInterface {
 
   async remove(aRecipe_id) {
     const query = `
-        DELETE FROM recipes_test
+        DELETE FROM recipes
         WHERE id = $1
         RETURNING *
         `;
@@ -64,7 +64,7 @@ export default class StoreRecipeRecord extends RecordStoreInterface {
   }
 
   async getAllRecipes() {
-    let query = `SELECT * FROM recipes_test`;
+    let query = `SELECT * FROM recipes`;
 
     return await db.read(query);
   }
