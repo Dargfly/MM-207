@@ -2,110 +2,148 @@ import express from "express";
 import fs from "fs/promises";
 import HTTP_CODES from "../utils/httpCodes.mjs";
 
-
 import StoreRecipeRecord from "../data/recipesRecordStore.mjs"; // Pass på at stien stemmer
 import RecipeModel from "../models/recipeModel.mjs";
 
-import { JSONrecipes} from "../init/init.mjs"
-
+import { JSONrecipes } from "../init/init.mjs";
+import { log } from "console";
 
 const storeRecipes = new StoreRecipeRecord(); // Opprett en instans av databasen
 
-
-
 let recipes = JSONrecipes;
 let allRecipes = [];
-
-
-
 
 const recipeRouter = express.Router();
 recipeRouter.use(express.json());
 
 //Get recipe based on ID
-recipeRouter.get("/:recipeID?", (req, res) => {
-  const recipeID = req.params.recipeID;
+recipeRouter.get("/:recipeID?", async (req, res, next) => {
+  let recipeID = req.params.recipeID;
 
   if (!recipeID) {
-    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Provide an ID for recipe to return" });
+    return res
+      .status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST)
+      .json({ message: "Provide an ID for recipe to return" });
   }
 
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Return recipe feature not implemented yet", recipeID });
+  recipeID = parseInt(recipeID, 10);
+
+  if (isNaN(recipeID)) {
+    return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({
+      message: "Invalid recipe ID format",
+    });
+  }  
+
+  try {
+    const recipe = await storeRecipes.read(recipeID);
+
+    if (!recipe) {
+      return res
+        .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
+        .json({ message: `Recipe with ID ${recipeID} not found` });
+    }
+
+    res.status(HTTP_CODES.SUCCESS.OK).json({
+      message: "Recipe found",
+      recipe: recipe,
+    });
+  } catch (error) {
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving recipe",
+      error: error.message,
+    });
+  }
 });
-
-
 
 //Create recipe
 recipeRouter.post("/", async (req, res, next) => {
   try {
-    const { object, ingredients, instructions } = req.body
+    const { object, ingredients, instructions } = req.body;
     //Lager en oppskrift basert på modellen
     const newRecipe = new RecipeModel({ object, ingredients, instructions });
-  
+
     // Lagre oppskriften i den faktiske databasen ved hjelp av StoreRecipeRecord
-    const createdRecipe = await storeRecipes.create(newRecipe);  // Vi antar at `create` er definert i `recipesRecordStore.js`
-    
-     // Legg til oppskriften i "databasen"
+    const createdRecipe = await storeRecipes.create(newRecipe); // Vi antar at `create` er definert i `recipesRecordStore.js`
+
+    // Legg til oppskriften i "databasen"
     allRecipes.push(newRecipe);
-  
+
     //Create a recipe, and return id or whole object
     res.status(HTTP_CODES.SUCCESS.CREATED).json({
       message: "Recipe created successfully!",
       recipe: createdRecipe,
     });
   } catch (error) {
-    res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({
       message: "Error creating recipe",
       error: error.message,
     });
-  } 
-})
+  }
+});
 
 //Update recipe based on ID
-recipeRouter.put("/:recipeID?", (req, res, next) => {
+recipeRouter.put("/:recipeID?", async (req, res, next) => {
   const recipeID = req.params.recipeID;
 
   if (!recipeID) {
-    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Provide an ID for recipe to update" });
+    return res
+      .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
+      .json({ message: "Provide an ID for recipe to update" });
   }
 
-  //Put recipe in object.
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Editing recipe feature not implemented yet", recipeID});
-})
+  try {
+    const { object, ingredients, instructions } = req.body;
+
+    // Sjekk om oppskriften finnes
+    const existingRecipe = await storeRecipes.read(recipeID);
+    if (!existingRecipe) {
+      return res
+        .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
+        .json({ message: `Recipe with ID ${recipeID} not found` });
+    }
+
+    // Opprett et oppdatert oppskriftsobjekt
+    const updatedRecipe = new RecipeModel({
+      object: object || existingRecipe.object,
+      ingredients: ingredients || existingRecipe.ingredients,
+      instructions: instructions || existingRecipe.instructions,
+    });
+
+    // Kall en update-funksjon i databasen (må være definert i storeRecipes)
+    const result = await storeRecipes.update(recipeID, updatedRecipe);
+
+    res.status(HTTP_CODES.SUCCESS.OK).json({
+      message: `Recipe with ID ${recipeID} updated successfully!`,
+      updatedRecipe: result,
+    });
+  } catch (error) {
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({
+      message: "Error updating recipe",
+      error: error.message,
+    });
+  }
+});
 
 //Delete recipe based on ID
 recipeRouter.delete("/:recipeID?", (req, res, next) => {
   const recipeID = req.params.recipeID;
 
   if (!recipeID) {
-    return res.status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND).json({ message: "Provide an ID for recipe to delete" });
+    return res
+      .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
+      .json({ message: "Provide an ID for recipe to delete" });
   }
 
   //Put recipe in object.
-  res.status(HTTP_CODES.SUCCESS.OK).json({ message: "Removing recipe feature not implemented yet", recipeID});
-})
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  res
+    .status(HTTP_CODES.SUCCESS.OK)
+    .json({ message: "Removing recipe feature not implemented yet", recipeID });
+});
 
 // //Returns whole tree
 // tree.get("/adadadada/", (req, res, next) => {
 //     res.json("test");
 // });
-
 
 // //Returns node based on data
 // function findNode(node, inpParentData) {
@@ -185,4 +223,4 @@ recipeRouter.delete("/:recipeID?", (req, res, next) => {
 //     }
 // });
 
-export default recipeRouter
+export default recipeRouter;
