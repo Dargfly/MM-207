@@ -30,6 +30,4 @@ appController.addView("recipe", loadRecipeView);
 appController.addView("edit", loadEditView);
 appController.addView("add", loadAddView);
 
-appController.showView("home");
-
 export default appController;
