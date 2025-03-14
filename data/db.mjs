@@ -28,7 +28,7 @@ async function runQuery(query, ...values) {
 
   try {
     const result = await client.query(query, values);
-    console.log("Connected to the database successfully!");
+    // console.log("Connected to the database successfully!");
     
     if (result.rowCount <= 0) {
       throw new Error("Row count is 0. No records created.");
@@ -44,6 +44,6 @@ async function runQuery(query, ...values) {
     throw error;
   } finally {
     await client.end();
-    console.log("Disconnected to the database successfully!");
+    // console.log("Disconnected to the database successfully!");
   }
 }
