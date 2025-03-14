@@ -22,11 +22,13 @@ export default class StoreRecipeRecord extends RecordStoreInterface {
 
   async read(aRecipe_id) {
     const query = `
-        SELECT * FROM recipes
-        WHERE id = $1
-        `;
-
-    return await db.read(query, ...[aRecipe_id]);
+      SELECT * FROM recipes_test
+      WHERE id = $1
+    `;    
+  
+    const result = await db.read(query, aRecipe_id);
+  
+    return result[0]; // Returnerer første rad hvis den finnes
   }
 
   async update(aRecipe_id, recipeChanges) {
