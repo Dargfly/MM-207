@@ -1,0 +1,25 @@
+<template>
+  <h1>Welcome to ReciPeace</h1>
+  <div style="display: flexbox;">
+
+    <h1>Edit recipe:</h1>
+    <div class="form-container">
+      <!-- Form for recipe title -->
+      <label for="recipeTitle">Recipe Title:</label>
+      <input type="text" id="recipeTitle" placeholder="Enter recipe title">
+
+      <h2>Ingredients</h2>
+      <div id="ingredientsContainer"></div>
+      <button id="btnAddIngredient">Add Ingredient</button>
+
+      <h2>Instructions</h2>
+      <div id="instructionsContainer"></div>
+      <button id="btnAddInstruction">Add Instruction</button>
+
+      <br><br>
+      <button id="btnSaveRecipe">Save Recipe</button>
+      <button id="btnDeleteRecipe">Delete Recipe</button>
+    </div>
+    <button id="btnBack">Back to Home</button>
+  </div>
+</template>
