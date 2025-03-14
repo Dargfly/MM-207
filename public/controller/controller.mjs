@@ -1,5 +1,7 @@
 import { loadHomeView } from './homeView.mjs';
 import { loadRecipeView } from './recipeView.mjs';
+import { loadEditView } from './editView.mjs';
+import { loadAddView } from './addView.mjs';
 
 class AppController {
   constructor() {
@@ -25,6 +27,8 @@ export const appController = new AppController();
 
 appController.addView("home", loadHomeView);
 appController.addView("recipe", loadRecipeView);
+appController.addView("edit", loadEditView);
+appController.addView("add", loadAddView);
 
 appController.showView("home");
 
