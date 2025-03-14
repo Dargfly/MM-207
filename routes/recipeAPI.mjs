@@ -16,6 +16,29 @@ let allRecipes = [];
 const recipeRouter = express.Router();
 recipeRouter.use(express.json());
 
+// Hent alle oppskrifter
+recipeRouter.get("/recipes", async (req, res, next) => {
+  try {
+    const recipes = await storeRecipes.getAllRecipes(); // Hent alle oppskrifter
+
+    if (recipes.length === 0) {
+      return res
+        .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
+        .json({ message: "No recipes found" });
+    }
+
+    res.status(HTTP_CODES.SUCCESS.OK).json({
+      message: "Recipes retrieved successfully",
+      recipes: recipes,
+    });
+  } catch (error) {
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({
+      message: "Error retrieving recipes",
+      error: error.message,
+    });
+  }
+});
+
 //Get recipe based on ID
 recipeRouter.get("/:recipeID?", async (req, res, next) => {
   let recipeID = req.params.recipeID;
@@ -171,6 +194,8 @@ recipeRouter.delete("/:recipeID?", async (req, res, next) => {
     });
   }
 });
+
+
 
 // //Returns whole tree
 // tree.get("/adadadada/", (req, res, next) => {
