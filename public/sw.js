@@ -2,9 +2,20 @@ const cacheID = "AppV1";
 const contentToCache = [
     "/index.html",
     "/scripts/script.mjs",
-    "/imgs/icons/cube_icon-192x192.png",
-    "/imgs/icons/cube_icon-512x512.png",
+    "/imgs/icons/noun-chef-192x192.png",
+    "/imgs/icons/noun-chef-512x512.png",
     "/css/style.css",
+    "/controller/addView.mjs",
+    "/controller/editView.mjs",
+    "/controller/controller.mjs",
+    "/controller/homeView.mjs",
+    "/controller/recipeView.mjs",
+    "/controller/recipeView.mjs",
+    "/view/addView.html",
+    "/view/editView.html",
+    "/view/homeView.html",
+    "/view/recipeView.html",
+    "/view/recipeView.html",
 ];
 
 self.addEventListener('install', (e) => {
