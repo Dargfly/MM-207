@@ -1,8 +1,21 @@
 import TemplateManager from "../modules/templateManager.mjs";
 import * as ApiHandler from "../modules/apiHandler.mjs";
 import { appController } from "./controller.mjs";
-
 const templateFile = "../view/editView.html";
+
+//  Dialog System ----------------------------------------------------------
+export function dialogMessage(title, message) {
+  // Ensure dialog exists before trying to use it
+  const dialog = TemplateManager.ensureDialogExists();
+    const titleDialog = document.getElementById("titleDialog");
+  const textDialog = document.getElementById("textDialog");
+  
+  titleDialog.innerText = title;
+  textDialog.innerText = message;
+
+  dialog.showModal();
+}
+// --------------------------------------------------------------------------
 
 export async function loadEditView(recipeId) {
   try {
@@ -14,6 +27,7 @@ export async function loadEditView(recipeId) {
     return editView;
   } catch (error) {
     console.error("Error loading edit view:", error);
+    dialogMessage("Error loading edit view:", error);
   }
 }
 
@@ -21,7 +35,7 @@ async function fetchAndDisplayRecipeDetails(recipeId) {
   try {
     const data = await ApiHandler.retriveRecipeById(recipeId); // Pass id-en her
     const recipe = data.recipe;
-    console.log(recipe);
+    // console.log(recipe);
 
     const recipeTitleInput = document.getElementById("recipeTitle");
     const ingredientsContainer = document.getElementById(
@@ -120,12 +134,15 @@ async function fetchAndDisplayRecipeDetails(recipeId) {
       }
 
       const sendRequest = await ApiHandler.updateRecipeById(recipeId, recipe)
-      console.log("Updated Recipe:", sendRequest);
+      // console.log(sendRequest);
+      
+      dialogMessage("Updated Recipe:", sendRequest.message);
     });
 
     btnDeleteRecipe.addEventListener("click", async function () {
       const sendRequest = await ApiHandler.deleteRecipeById(recipeId)
-      console.log("Deleted Recipe:", sendRequest);
+      // console.log("Deleted Recipe:", sendRequest);
+      dialogMessage("Deleted Recipe:", sendRequest.message);
     })
 
     recipeTitleInput.value = recipe.object;
@@ -139,5 +156,6 @@ async function fetchAndDisplayRecipeDetails(recipeId) {
     });
   } catch (error) {
     console.error("Error fetching recipe details:", error);
+    dialogMessage("Error fetching recipe details:", error);
   }
 }

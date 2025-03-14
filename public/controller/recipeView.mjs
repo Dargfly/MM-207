@@ -1,8 +1,21 @@
 import TemplateManager from "../modules/templateManager.mjs";
 import * as ApiHandler from "../modules/apiHandler.mjs";
 import { appController } from "./controller.mjs";
-
 const templateFile = "/view/recipeView.html";
+
+//  Dialog System ----------------------------------------------------------
+export function dialogMessage(title, message) {
+  // Ensure dialog exists before trying to use it
+  const dialog = TemplateManager.ensureDialogExists();
+    const titleDialog = document.getElementById("titleDialog");
+  const textDialog = document.getElementById("textDialog");
+  
+  titleDialog.innerText = title;
+  textDialog.innerText = message;
+
+  dialog.showModal();
+}
+// --------------------------------------------------------------------------
 
 export async function loadRecipeView(recipeId) {
   try {
@@ -23,14 +36,13 @@ export async function loadRecipeView(recipeId) {
     return recipeView;
   } catch (error) {
     console.error("Error loading recipe view:", error);
+    dialogMessage("Error loading edit view:", error);
   }
 }
 
 async function fetchAndDisplayRecipeDetails(recipeId) {
   try {
     const data = await ApiHandler.retriveRecipeById(recipeId); // Pass id-en her
-    console.log(data);
-
     const recipeTitle = document.getElementById("recipeTitle");
     const ingredientsList = document.getElementById("ingredientsList");
     const instructionsList = document.getElementById("instructionsList");
@@ -65,8 +77,10 @@ async function fetchAndDisplayRecipeDetails(recipeId) {
       }
     } else {
       console.error("Recipe not found!");
+      dialogMessage("Recipe not found!"); 
     }
   } catch (error) {
     console.error("Error fetching recipe details:", error);
+    dialogMessage("Error fetching recipe details:", error);
   }
 }

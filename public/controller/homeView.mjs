@@ -1,8 +1,21 @@
 import TemplateManager from "../modules/templateManager.mjs";
 import * as ApiHandler from "../modules/apiHandler.mjs";
 import { appController } from './controller.mjs';
-
 const templateFile = "../view/homeView.html";
+
+//  Dialog System ----------------------------------------------------------
+export function dialogMessage(title, message) {
+  // Ensure dialog exists before trying to use it
+  const dialog = TemplateManager.ensureDialogExists();
+    const titleDialog = document.getElementById("titleDialog");
+  const textDialog = document.getElementById("textDialog");
+  
+  titleDialog.innerText = title;
+  textDialog.innerText = message;
+
+  dialog.showModal();
+}
+// --------------------------------------------------------------------------
 
 export async function loadHomeView() {
   try {
@@ -14,6 +27,8 @@ export async function loadHomeView() {
     return homeView;
   } catch (error) {
     console.error("Error loading home view:", error);
+    dialogMessage("Error loading home view:", error);
+
   }
 }
 
@@ -45,7 +60,8 @@ async function fetchAndDisplayRecipes() {
       `;
 
       recipeElement.addEventListener("click", () => {
-        console.log(`Recipe ID: ${recipe.id}`);
+        dialogMessage("Recipe ID:", recipe.id);
+        // console.log(`Recipe ID: ${recipe.id}`);
         appController.showView("recipe", recipe.id);
       });
 
@@ -58,6 +74,7 @@ async function fetchAndDisplayRecipes() {
     
   } catch (error) {
     console.error("Error fetching recipes:", error);
+    dialogMessage("Error fetching recipe details:", error);
   }
 }
 

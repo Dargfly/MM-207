@@ -1,8 +1,21 @@
 import TemplateManager from "../modules/templateManager.mjs";
 import * as ApiHandler from "../modules/apiHandler.mjs";
 import { appController } from "./controller.mjs";
-
 const templateFile = "../view/addView.html";
+
+//  Dialog System ----------------------------------------------------------
+export function dialogMessage(title, message) {
+  // Ensure dialog exists before trying to use it
+  const dialog = TemplateManager.ensureDialogExists();
+    const titleDialog = document.getElementById("titleDialog");
+  const textDialog = document.getElementById("textDialog");
+  
+  titleDialog.innerText = title;
+  textDialog.innerText = message;
+
+  dialog.showModal();
+}
+// --------------------------------------------------------------------------
 
 export async function loadAddView() {
   try {
@@ -14,6 +27,7 @@ export async function loadAddView() {
     return addView;
   } catch (error) {
     console.error("Error loading add view:", error);
+    dialogMessage("Error loading edit view:", error);
   }
 }
 
@@ -24,7 +38,7 @@ async function fetchAndDisplayRecipeDetails() {
       ingredients: [""],
       instructions: [""],
     };
-    console.log(recipe);
+    // console.log(recipe);
 
     const recipeTitleInput = document.getElementById("recipeTitle");
     const ingredientsContainer = document.getElementById(
@@ -185,7 +199,7 @@ async function fetchAndDisplayRecipeDetails() {
       }
 
       const sendRequest = await ApiHandler.addRecipe(recipe);
-      console.log("Updated Recipe:", sendRequest);
+      dialogMessage("Updated Recipe:", sendRequest.message);
     });
 
     recipeTitleInput.value = recipe.object;
@@ -199,5 +213,6 @@ async function fetchAndDisplayRecipeDetails() {
     
   } catch (error) {
     console.error("Error fetching recipe details:", error);
+    dialogMessage("Error fetching recipe details:", error);
   }
 }
