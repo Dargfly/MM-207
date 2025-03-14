@@ -2,7 +2,7 @@ import TemplateManager from "../modules/templateManager.mjs";
 import * as ApiHandler from "../modules/apiHandler.mjs";
 import { appController } from './controller.mjs';
 
-const templateFile = "/view/homeView.html";
+const templateFile = "../view/homeView.html";
 
 export async function loadHomeView() {
   try {
