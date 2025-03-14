@@ -32,7 +32,7 @@ recipeRouter.get("/:recipeID?", async (req, res, next) => {
     return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({
       message: "Invalid recipe ID format",
     });
-  }  
+  }
 
   try {
     const recipe = await storeRecipes.read(recipeID);
@@ -83,12 +83,20 @@ recipeRouter.post("/", async (req, res, next) => {
 
 //Update recipe based on ID
 recipeRouter.put("/:recipeID?", async (req, res, next) => {
-  const recipeID = req.params.recipeID;
+  let recipeID = req.params.recipeID;
 
   if (!recipeID) {
     return res
       .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
       .json({ message: "Provide an ID for recipe to update" });
+  }
+
+  recipeID = parseInt(recipeID, 10);
+
+  if (isNaN(recipeID)) {
+    return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({
+      message: "Invalid recipe ID format",
+    });
   }
 
   try {
@@ -98,7 +106,7 @@ recipeRouter.put("/:recipeID?", async (req, res, next) => {
     const existingRecipe = await storeRecipes.read(recipeID);
     if (!existingRecipe) {
       return res
-        .status(HTTP_CODES.CLIENT_ERROR.NOT_FOUND)
+        .status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR)
         .json({ message: `Recipe with ID ${recipeID} not found` });
     }
 
@@ -125,8 +133,8 @@ recipeRouter.put("/:recipeID?", async (req, res, next) => {
 });
 
 //Delete recipe based on ID
-recipeRouter.delete("/:recipeID?", (req, res, next) => {
-  const recipeID = req.params.recipeID;
+recipeRouter.delete("/:recipeID?", async (req, res, next) => {
+  let recipeID = req.params.recipeID;
 
   if (!recipeID) {
     return res
@@ -134,10 +142,34 @@ recipeRouter.delete("/:recipeID?", (req, res, next) => {
       .json({ message: "Provide an ID for recipe to delete" });
   }
 
-  //Put recipe in object.
-  res
-    .status(HTTP_CODES.SUCCESS.OK)
-    .json({ message: "Removing recipe feature not implemented yet", recipeID });
+  recipeID = parseInt(recipeID, 10);
+
+  if (isNaN(recipeID)) {
+    return res.status(HTTP_CODES.CLIENT_ERROR.BAD_REQUEST).json({
+      message: "Invalid recipe ID format",
+    });
+  }
+
+  try {
+    const deletedRecipe = await storeRecipes.remove(recipeID); // Vi antar at `delete` er definert i `recipesRecordStore.js`
+
+    // Hvis ingen oppskrift ble funnet med den ID-en
+    if (!deletedRecipe) {
+      return res
+        .status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR)
+        .json({ message: `Recipe with ID ${recipeID} not found` });
+    }
+
+    res.status(HTTP_CODES.SUCCESS.OK).json({
+      message: "Recipe deleted successfully!",
+      recipeID: recipeID,
+    });
+  } catch (error) {
+    res.status(HTTP_CODES.SERVER_ERROR.INTERNAL_SERVER_ERROR).json({
+      message: "Error deleting recipe",
+      error: error.message,
+    });
+  }
 });
 
 // //Returns whole tree
