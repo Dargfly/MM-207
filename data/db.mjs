@@ -29,20 +29,21 @@ async function runQuery(query, ...values) {
   try {
     const result = await client.query(query, values);
     console.log("Connected to the database successfully!");
-
+    
     if (result.rowCount <= 0) {
       throw new Error("Row count is 0. No records created.");
     }
-
+    
     if (query.trim().toUpperCase().startsWith("SELECT")) {
       return result.rows;
     }
-
+    
     return result.rows[0];
   } catch (error) {
     console.error(error);
     throw error;
   } finally {
     await client.end();
+    console.log("Disconnected to the database successfully!");
   }
 }
