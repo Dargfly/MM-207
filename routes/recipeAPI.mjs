@@ -83,9 +83,6 @@ recipeRouter.post("/", async (req, res, next) => {
     // Lagre oppskriften i den faktiske databasen ved hjelp av StoreRecipeRecord
     const createdRecipe = await storeRecipes.create(newRecipe); // Vi antar at `create` er definert i `recipesRecordStore.js`
 
-    // Legg til oppskriften i "databasen"
-    allRecipes.push(newRecipe);
-
     //Create a recipe, and return id or whole object
     res.status(HTTP_CODES.SUCCESS.CREATED).json({
       message: "Recipe created successfully!",
